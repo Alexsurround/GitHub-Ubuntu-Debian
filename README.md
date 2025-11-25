@@ -1,12 +1,23 @@
-# Клонирование репозитория с GitHub на Ubuntu/Debian
+# Клонирование репозитория с GitHub на Ubuntu/Debian и Windows
 
 ## Предварительная установка
 
+### Linux (Ubuntu/Debian)
 Установите Git, если он еще не установлен:
 ```bash
 sudo apt update
 sudo apt install git
 ```
+
+### Windows
+1. Скачайте Git for Windows с официального сайта: https://git-scm.com/download/win
+2. Запустите установщик
+3. Рекомендуемые настройки при установке:
+   - Выберите "Use Git from Git Bash only" или "Git from the command line and also from 3rd-party software"
+   - Выберите "Use bundled OpenSSH"
+   - Выберите "Use the OpenSSL library"
+   - Выберите "Checkout Windows-style, commit Unix-style line endings"
+4. После установки откройте **Git Bash** из меню Пуск
 
 ## 1. Клонирование репозитория
 
@@ -78,8 +89,15 @@ ssh -T git@github.com
 
 ### Настройка SSH конфига для нескольких аккаунтов
 
-Создайте/отредактируйте файл `~/.ssh/config`:
+**Linux:**
 ```bash
+nano ~/.ssh/config
+```
+
+**Windows (Git Bash):**
+```bash
+notepad ~/.ssh/config
+# или
 nano ~/.ssh/config
 ```
 
@@ -135,6 +153,21 @@ git remote -v
 
 ## 7. Настройка GPG ключей для подписи коммитов
 
+### Установка GPG
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt install gnupg
+```
+
+**Windows:**
+GPG уже входит в состав Git for Windows. Проверьте:
+```bash
+gpg --version
+```
+
+Если GPG отсутствует, установите Gpg4win: https://www.gpg4win.org/
+
 ### Генерация GPG ключа
 ```bash
 gpg --full-generate-key
@@ -145,6 +178,8 @@ gpg --full-generate-key
 - Размер ключа: `4096`
 - Срок действия: `0` (не истекает) или укажите срок
 - Введите имя и email (должен совпадать с email в Git)
+
+**Примечание для Windows:** При генерации ключа может открыться окно для ввода пароля (passphrase).
 
 ### Просмотр списка GPG ключей
 ```bash
@@ -188,9 +223,23 @@ git config --global tag.gpgsign true
 ```
 
 ### Настройка GPG для работы в терминале (если возникают проблемы)
+
+**Linux:**
 ```bash
 echo 'export GPG_TTY=$(tty)' >> ~/.bashrc
 source ~/.bashrc
+```
+
+**Windows (Git Bash):**
+Добавьте в `~/.bash_profile` или `~/.bashrc`:
+```bash
+echo 'export GPG_TTY=$(tty)' >> ~/.bash_profile
+source ~/.bash_profile
+```
+
+Для Windows также может потребоваться:
+```bash
+git config --global gpg.program "C:/Program Files/Git/usr/bin/gpg.exe"
 ```
 
 ### Создание подписанного коммита
@@ -254,9 +303,23 @@ gpg --import private-key.asc
 
 **fatal: not a git repository** - Вы не находитесь в директории Git репозитория
 
-**gpg: signing failed: Inappropriate ioctl for device** - Добавьте `export GPG_TTY=$(tty)` в ~/.bashrc
+**gpg: signing failed: Inappropriate ioctl for device** - Добавьте `export GPG_TTY=$(tty)` в ~/.bashrc (Linux) или ~/.bash_profile (Windows)
 
 **error: gpg failed to sign the data** - Проверьте, что GPG ключ настроен правильно: `git config user.signingkey`
+
+**Windows: ssh-add не работает** - Запустите `eval $(ssh-agent -s)` перед добавлением ключа
+
+**Windows: проблемы с правами на файлы SSH** - Выполните:
+```bash
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519_github
+chmod 644 ~/.ssh/id_ed25519_github.pub
+```
+
+**Windows: проблемы с переносами строк (CRLF)** - Настройте:
+```bash
+git config --global core.autocrlf true
+```
 
 ## Рекомендации
 
@@ -267,3 +330,45 @@ gpg --import private-key.asc
 - Храните резервные копии приватных GPG ключей в безопасном месте
 - Для работы с Personal Access Token вместо пароля создайте токен в GitHub Settings → Developer settings
 - На GitHub в разделе **Settings → SSH and GPG keys** вы можете управлять всеми своими ключами и видеть, когда они последний раз использовались
+
+## Особенности работы в Windows Git Bash
+
+### Пути к файлам
+- Домашняя директория: `/c/Users/YourUsername/` или `~`
+- SSH ключи находятся в: `~/.ssh/`
+- Git конфигурация: `~/.gitconfig`
+
+### Открытие Git Bash
+- Через меню Пуск: "Git Bash"
+- Из контекстного меню: правый клик в папке → "Git Bash Here"
+- Из VS Code: встроенный терминал с профилем Git Bash
+
+### Редакторы в Git Bash
+```bash
+# Использование Notepad
+notepad ~/.ssh/config
+
+# Использование nano (встроен в Git Bash)
+nano ~/.ssh/config
+
+# Использование VS Code (если установлен)
+code ~/.ssh/config
+
+# Установка VS Code как редактор по умолчанию для Git
+git config --global core.editor "code --wait"
+```
+
+### Копирование в буфер обмена (Windows)
+```bash
+# Скопировать SSH ключ
+cat ~/.ssh/id_ed25519_github.pub | clip
+
+# Скопировать GPG ключ
+gpg --armor --export 3AA5C34371567BD2 | clip
+```
+
+### Интеграция с Windows Credential Manager
+```bash
+# Использовать Windows Credential Manager для хранения паролей
+git config --global credential.helper manager
+```
