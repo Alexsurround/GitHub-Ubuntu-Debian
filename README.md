@@ -333,6 +333,230 @@ git config --global core.autocrlf true
 
 ## Особенности работы в Windows Git Bash
 
+### Полное руководство: подключение к приватному репозиторию через SSH в Windows
+
+#### Шаг 1: Открытие Git Bash
+Откройте Git Bash одним из способов:
+- Через меню Пуск → найдите "Git Bash"
+- Правый клик в любой папке → "Git Bash Here"
+
+#### Шаг 2: Проверка существующих SSH ключей
+```bash
+ls -la ~/.ssh
+```
+
+Если директория `~/.ssh` не существует или пуста, переходите к шагу 3.
+
+#### Шаг 3: Генерация SSH ключа
+```bash
+ssh-keygen -t ed25519 -C "your.email@example.com"
+```
+
+При появлении запросов:
+1. **Enter file in which to save the key**: Нажмите Enter (сохранит как `/c/Users/YourName/.ssh/id_ed25519`)
+2. **Enter passphrase**: Введите пароль для дополнительной безопасности или нажмите Enter для пропуска
+3. **Enter same passphrase again**: Повторите пароль
+
+Вы увидите сообщение о создании ключа и его fingerprint.
+
+#### Шаг 4: Запуск SSH-агента
+```bash
+eval "$(ssh-agent -s)"
+```
+
+Вы должны увидеть: `Agent pid 1234` (число может отличаться)
+
+#### Шаг 5: Добавление ключа в SSH-агент
+```bash
+ssh-add ~/.ssh/id_ed25519
+```
+
+Если вы установили passphrase, введите его.
+
+**Важно для Windows:** Если появляется ошибка "Could not open a connection to your authentication agent", выполните снова:
+```bash
+eval $(ssh-agent -s)
+ssh-add ~/.ssh/id_ed25519
+```
+
+#### Шаг 6: Копирование публичного ключа
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+**Способ 1 - Копирование вручную:**
+Выделите весь вывод команды (начиная с `ssh-ed25519` и заканчивая вашим email) и скопируйте через правый клик → Copy
+
+**Способ 2 - Копирование в буфер обмена:**
+```bash
+cat ~/.ssh/id_ed25519.pub | clip
+```
+
+#### Шаг 7: Добавление SSH ключа в GitHub
+1. Откройте браузер и войдите в GitHub
+2. Нажмите на свой аватар (правый верхний угол) → **Settings**
+3. В левом меню выберите **SSH and GPG keys**
+4. Нажмите зеленую кнопку **New SSH key**
+5. Заполните форму:
+   - **Title**: Придумайте описательное имя, например "Windows Laptop"
+   - **Key type**: Оставьте "Authentication Key"
+   - **Key**: Вставьте скопированный ключ (Ctrl+V)
+6. Нажмите **Add SSH key**
+7. Подтвердите действие вводом пароля GitHub
+
+#### Шаг 8: Проверка SSH подключения
+```bash
+ssh -T git@github.com
+```
+
+**При первом подключении** появится предупреждение:
+```
+The authenticity of host 'github.com (IP)' can't be established.
+ED25519 key fingerprint is SHA256:...
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```
+
+Введите `yes` и нажмите Enter.
+
+**Успешный результат:**
+```
+Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+Если видите это сообщение - SSH настроен правильно!
+
+#### Шаг 9: Клонирование приватного репозитория
+```bash
+# Перейдите в нужную директорию, например на диск D:
+cd /d/Projects
+
+# Клонируйте репозиторий по SSH
+git clone git@github.com:username/private-repo.git
+
+# Перейдите в склонированный репозиторий
+cd private-repo
+```
+
+**Как получить SSH URL репозитория:**
+1. Откройте страницу репозитория на GitHub
+2. Нажмите зеленую кнопку **Code**
+3. Выберите вкладку **SSH**
+4. Скопируйте URL (должен начинаться с `git@github.com:`)
+
+#### Шаг 10: Настройка Git идентификации
+```bash
+# Установите имя и email для коммитов
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
+
+# Проверьте настройки
+git config --list
+```
+
+#### Автозапуск SSH-агента в Windows (опционально)
+
+Чтобы не запускать ssh-agent каждый раз, добавьте автозапуск:
+
+```bash
+# Откройте файл конфигурации
+nano ~/.bash_profile
+```
+
+Добавьте следующие строки:
+```bash
+env=~/.ssh/agent.env
+
+agent_load_env () { test -f "$env" && . "$env" >| /dev/null ; }
+
+agent_start () {
+    (umask 077; ssh-agent >| "$env")
+    . "$env" >| /dev/null ; }
+
+agent_load_env
+
+# agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2=agent not running
+agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
+
+if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
+    agent_start
+    ssh-add ~/.ssh/id_ed25519
+elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
+    ssh-add ~/.ssh/id_ed25519
+fi
+
+unset env
+```
+
+Сохраните файл (Ctrl+O, Enter, Ctrl+X) и перезапустите Git Bash.
+
+#### Устранение проблем
+
+**Проблема: "Permission denied (publickey)"**
+```bash
+# Проверьте, что ключ добавлен в агент
+ssh-add -l
+
+# Если ключ не найден, добавьте его
+ssh-add ~/.ssh/id_ed25519
+
+# Проверьте подключение
+ssh -T git@github.com
+```
+
+**Проблема: "Could not open a connection to your authentication agent"**
+```bash
+# Перезапустите SSH-агент
+eval $(ssh-agent -s)
+ssh-add ~/.ssh/id_ed25519
+```
+
+**Проблема: Ошибка прав доступа к файлам ключей**
+```bash
+# Установите правильные права доступа
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+```
+
+**Проблема: SSH ключ не работает после перезагрузки**
+- Используйте автозапуск SSH-агента (см. выше)
+- Или добавляйте ключ вручную после каждого запуска Git Bash: `ssh-add ~/.ssh/id_ed25519`
+
+#### Работа с несколькими приватными репозиториями
+
+Если у вас несколько GitHub аккаунтов или нужны разные ключи:
+
+```bash
+# Создайте второй ключ с другим именем
+ssh-keygen -t ed25519 -C "work.email@company.com" -f ~/.ssh/id_ed25519_work
+
+# Добавьте в SSH-агент
+ssh-add ~/.ssh/id_ed25519_work
+
+# Создайте/отредактируйте SSH config
+notepad ~/.ssh/config
+```
+
+Добавьте в файл:
+```
+# Личный аккаунт
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+
+# Рабочий аккаунт
+Host github-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_work
+```
+
+Теперь клонируйте рабочие репозитории так:
+```bash
+git clone git@github-work:company/private-repo.git
+```
+
 ### Пути к файлам
 - Домашняя директория: `/c/Users/YourUsername/` или `~`
 - SSH ключи находятся в: `~/.ssh/`
