@@ -96,7 +96,7 @@ cd digital-signage-system
 pnpm install
 ```
 
-## 3. Configure database:
+3. Configure database:
 ```bash
 mysql -u root -p
 CREATE DATABASE digital_signage;
@@ -150,18 +150,18 @@ Open [http://localhost:3000](http://localhost:3000)
 2. Assign playlist to device
 3. Open player URL on display device
 4. View statistics in Device Details
-
-### Player URL Format
+#### Player URL Format
 ```
 http://your-server:3000/player?device=DEVICE_ID&playlist=PLAYLIST_ID
 ```
 
-Debug mode:
+#### Debug mode:
 ```
 http://your-server:3000/player?device=DEVICE_ID&debug=true
 ```
+```
+# Systemd Service (Production)
 
-### Systemd Service (Production)
 ```bash
 sudo nano /etc/systemd/system/digital-signage.service
 ```
@@ -185,16 +185,17 @@ WantedBy=multi-user.target
 sudo systemctl enable digital-signage.service
 sudo systemctl start digital-signage.service
 ```
-
-### License
+```
+# License
 
 MIT
 
-### Version
+# Version
 
 v1.1 - December 2025
 EOF
-3. Создайте .env.example
+```
+## 3. Создайте .env.example
 ```bash
 cat > .env.example << 'EOF'
 # Database
