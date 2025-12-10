@@ -46,6 +46,9 @@ EOF
 # Создайте пустой файл чтобы папка uploads сохранилась
 mkdir -p public/uploads
 touch public/uploads/.gitkeep
+mkdir -p public/screenshots
+touch public/screenshots/.gitkeep
+
 ```
 2. Создайте README.md
 ```bash
