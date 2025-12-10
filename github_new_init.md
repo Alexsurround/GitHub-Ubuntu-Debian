@@ -5,52 +5,54 @@
 
 ```bash
 cd /opt/digital_signage_system
-```
-## Создайте .gitignore
+
+# Создайте .gitignore
 cat > .gitignore << 'EOF'
-## Dependencies
+# Dependencies
 node_modules/
 .pnpm-store/
 
-## Build
+# Build
 dist/
 build/
 
-## Environment
+# Environment
 .env
 .env.local
 .env.production
 
-## Logs
+# Logs
 *.log
 npm-debug.log*
 
-## OS
+# OS
 .DS_Store
 Thumbs.db
 
-## IDE
+# IDE
 .vscode/
 .idea/
 
-## Uploads
+# Uploads
 public/uploads/*
 !public/uploads/.gitkeep
 
-## Database
+# Database
 *.sql.backup
 EOF
 
-## Создайте пустой файл чтобы папка uploads сохранилась
+# Создайте пустой файл чтобы папка uploads сохранилась
 mkdir -p public/uploads
 touch public/uploads/.gitkeep
+```
 2. Создайте README.md
-bashcat > README.md << 'EOF'
-## Digital Signage System
+```bash
+cat > README.md << 'EOF'
+# Digital Signage System
 
 Modern digital signage management system built with React, tRPC, and MySQL.
 
-### Features
+## Features
 
 - 📺 Display device management
 - 🎬 Playlist creation with media & text overlays
@@ -60,22 +62,22 @@ Modern digital signage management system built with React, tRPC, and MySQL.
 - 🎨 Smooth slide transitions
 - 💓 Device heartbeat tracking
 
-### Tech Stack
+## Tech Stack
 
 - **Frontend:** React 18, TypeScript, Tailwind CSS, Shadcn/ui
 - **Backend:** Node.js, tRPC, Drizzle ORM
 - **Database:** MySQL
 - **Build:** Vite, pnpm
 
-### Installation
+## Installation
 
-#### Prerequisites
+### Prerequisites
 
 - Node.js 20+
 - MySQL 8+
 - pnpm
 
-#### Setup
+### Setup
 
 1. Clone repository:
 ```bash
