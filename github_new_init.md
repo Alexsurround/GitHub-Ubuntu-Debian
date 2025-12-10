@@ -136,7 +136,7 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
-
+```
 ### Usage
 
 #### Create Playlist
@@ -158,7 +158,6 @@ http://your-server:3000/player?device=DEVICE_ID&playlist=PLAYLIST_ID
 #### Debug mode:
 ```
 http://your-server:3000/player?device=DEVICE_ID&debug=true
-```
 ```
 # Systemd Service (Production)
 
