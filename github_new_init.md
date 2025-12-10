@@ -36,6 +36,8 @@ Thumbs.db
 # Uploads
 public/uploads/*
 !public/uploads/.gitkeep
+public/screenshots/*
+!public/screenshots/.gitkeep
 
 # Database
 *.sql.backup
