@@ -136,7 +136,7 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
-```
+
 ### Usage
 
 #### Create Playlist
@@ -159,7 +159,7 @@ http://your-server:3000/player?device=DEVICE_ID&playlist=PLAYLIST_ID
 ```
 http://your-server:3000/player?device=DEVICE_ID&debug=true
 ```
-# Systemd Service (Production)
+### Systemd Service (Production)
 
 ```bash
 sudo nano /etc/systemd/system/digital-signage.service
