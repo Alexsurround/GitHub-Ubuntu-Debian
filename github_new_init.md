@@ -1,7 +1,7 @@
 # НОВЫЙ репозиторий
 
 Пошаговый план:
-1. Подготовка проекта
+## 1. Подготовка проекта
 
 ```bash
 cd /opt/digital_signage_system
@@ -50,14 +50,15 @@ mkdir -p public/screenshots
 touch public/screenshots/.gitkeep
 
 ```
-2. Создайте README.md
+## 2. Создайте README.md
+
 ```bash
 cat > README.md << 'EOF'
 # Digital Signage System
 
 Modern digital signage management system built with React, tRPC, and MySQL.
 
-## Features
+# Features
 
 - 📺 Display device management
 - 🎬 Playlist creation with media & text overlays
@@ -67,22 +68,22 @@ Modern digital signage management system built with React, tRPC, and MySQL.
 - 🎨 Smooth slide transitions
 - 💓 Device heartbeat tracking
 
-## Tech Stack
+# Tech Stack
 
 - **Frontend:** React 18, TypeScript, Tailwind CSS, Shadcn/ui
 - **Backend:** Node.js, tRPC, Drizzle ORM
 - **Database:** MySQL
 - **Build:** Vite, pnpm
 
-## Installation
+# Installation
 
-### Prerequisites
+# Prerequisites
 
 - Node.js 20+
 - MySQL 8+
 - pnpm
 
-### Setup
+# Setup
 
 1. Clone repository:
 ```bash
@@ -95,7 +96,7 @@ cd digital-signage-system
 pnpm install
 ```
 
-3. Configure database:
+## 3. Configure database:
 ```bash
 mysql -u root -p
 CREATE DATABASE digital_signage;
@@ -129,7 +130,7 @@ pnpm build
 pnpm start
 ```
 
-### Development
+ Development
 ```bash
 pnpm dev
 ```
@@ -194,28 +195,30 @@ MIT
 v1.1 - December 2025
 EOF
 3. Создайте .env.example
-bashcat > .env.example << 'EOF'
-## Database
+```bash
+cat > .env.example << 'EOF'
+# Database
 DATABASE_URL="mysql://signage:password@localhost:3306/digital_signage"
 
-## JWT
+# JWT
 JWT_SECRET=your-secret-key-here
 
-## Owner
+# Owner
 OWNER_OPEN_ID=local-user-1
 OWNER_NAME=Admin
 OWNER_EMAIL=admin@localhost
 
-## OAuth (optional, can be disabled)
+# OAuth (optional, can be disabled)
 DISABLE_OAUTH=true
 OAUTH_SERVER_URL=http://localhost:3000
 
-## Application
+# Application
 VITE_APP_TITLE=Digital Signage System
 VITE_APP_LOGO=/logo.png
 NODE_ENV=production
 EOF
-4. Создайте репозиторий на GitHub
+```
+## 4. Создайте репозиторий на GitHub
 
 Откройте https://github.com/new
 Repository name: digital-signage-system
@@ -224,16 +227,17 @@ Public или Private (выбирайте)
 НЕ добавляйте README, .gitignore, license (у вас уже есть)
 Create repository
 
-5. Загрузите код
-bashcd /opt/digital_signage_system
+## 5. Загрузите код
+```bash
+cd /opt/digital_signage_system
 
-## Инициализируйте git
+# Инициализируйте git
 git init
 
-## Добавьте все файлы
+# Добавьте все файлы
 git add .
 
-## Первый коммит
+# Первый коммит
 git commit -m "Initial commit - v1.1
 
 Features:
@@ -245,17 +249,19 @@ Features:
 - Device heartbeat tracking
 - OAuth bypass for local development"
 
-## Подключите к GitHub (замените YOUR_USERNAME)
+# Подключите к GitHub (замените YOUR_USERNAME)
 git remote add origin https://github.com/YOUR_USERNAME/digital-signage-system.git
 
-## Отправьте код
+# Отправьте код
 git branch -M main
 git push -u origin main
 
-## Создайте тег версии
+# Создайте тег версии
 git tag -a v1.1 -m "Version 1.1 - Production ready"
 git push origin v1.1
-6. Настройте GitHub репозиторий
+```
+## 6. Настройте GitHub репозиторий
+
 После загрузки:
 
 Добавьте Topics (Settings → Topics):
