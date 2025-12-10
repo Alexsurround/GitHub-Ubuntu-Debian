@@ -2,7 +2,9 @@
 
 Пошаговый план:
 1. Подготовка проекта
-bashcd /opt/digital_signage_system
+
+```bash
+cd /opt/digital_signage_system
 
 ## Создайте .gitignore
 cat > .gitignore << 'EOF'
