@@ -5,7 +5,7 @@
 
 ```bash
 cd /opt/digital_signage_system
-
+```
 ## Создайте .gitignore
 cat > .gitignore << 'EOF'
 ## Dependencies
